@@ -3,122 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rakshak AI</title>
-    <!-- Tailwind CSS (via CDN with Config) -->
+    <title>Rakshak AI | Cyber Defense</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
-                    colors: {
-                        slate: {
-                            850: '#1e293b', // Custom darker slate for cards
-                        }
-                    }
+                    colors: { slate: { 850: '#1e293b' } }
                 }
             }
         }
     </script>
-    <!-- Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-
-        /* Custom Animations */
-        @keyframes pulse-ring {
-            0% { transform: scale(0.33); opacity: 1; }
-            80%, 100% { opacity: 0; }
-        }
-        @keyframes pulse-dot {
-            0% { transform: scale(0.8); }
-            50% { transform: scale(1); }
-            100% { transform: scale(0.8); }
-        }
+        body { font-family: 'Inter', sans-serif; }
         
-        .mic-pulse::before {
-            content: '';
-            position: absolute;
-            left: 0; top: 0;
-            display: block;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(239, 68, 68, 0.4); /* Red-500 */
-            border-radius: 50%;
-            animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
-        }
-        
-        .mic-pulse::after {
-            content: '';
-            position: absolute;
-            left: 0; top: 0;
-            display: block;
-            width: 100%;
-            height: 100%;
-            background-color: #ef4444; /* Red-500 */
-            border-radius: 50%;
-            animation: pulse-dot 1.25s cubic-bezier(0.455, 0.03, 0.515, 0.955) -0.4s infinite;
-        }
-
-        /* Audio Wave Animation Bars */
-        .bar {
-            width: 6px;
-            background: #6366f1;
-            border-radius: 9999px;
-            animation: sound 0ms -800ms linear infinite alternate;
-            height: 10px;
-        }
-
-        @keyframes sound {
-            0% { height: 10px; opacity: 0.5; }
-            100% { height: 60px; opacity: 1; }
-        }
-
-        /* Hide scrollbar for transcript */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        /* Transitions */
-        .fade-enter {
-            opacity: 0;
-            transform: translateY(10px);
-        }
-        .fade-enter-active {
-            opacity: 1;
-            transform: translateY(0);
-            transition: opacity 300ms, transform 300ms;
-        }
+        /* Animations */
+        @keyframes pulse-ring { 0% { transform: scale(0.33); opacity: 1; } 80%, 100% { opacity: 0; } }
+        @keyframes pulse-dot { 0% { transform: scale(0.8); } 50% { transform: scale(1); } 100% { transform: scale(0.8); } }
+        .mic-pulse::before { content: ''; position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(239, 68, 68, 0.4); border-radius: 50%; animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite; }
+        .mic-pulse::after { content: ''; position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: #ef4444; border-radius: 50%; animation: pulse-dot 1.25s cubic-bezier(0.455, 0.03, 0.515, 0.955) -0.4s infinite; }
+        .bar { width: 6px; background: #6366f1; border-radius: 9999px; animation: sound 0ms -800ms linear infinite alternate; height: 10px; }
+        @keyframes sound { 0% { height: 10px; opacity: 0.5; } 100% { height: 60px; opacity: 1; } }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .fade-enter { opacity: 0; transform: translateY(10px); }
+        .fade-enter-active { opacity: 1; transform: translateY(0); transition: opacity 300ms, transform 300ms; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 h-screen flex flex-col overflow-hidden transition-colors duration-300 dark:bg-slate-900 dark:text-slate-100">
 
-    <!-- Toast Notification Container -->
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2"></div>
 
-    <!-- MAIN APP CONTAINER -->
     <div id="app-container" class="flex-1 flex flex-col relative w-full h-full">
         
-        <!-- VIEW 1: AUTHENTICATION (Login/Signup) -->
         <div id="view-auth" class="view-section w-full h-full flex items-center justify-center p-4">
             <div class="bg-white dark:bg-slate-800 w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-slate-100 dark:border-slate-700 transition-colors">
-                <!-- Header -->
+                
                 <div class="bg-indigo-600 p-8 text-center relative">
-                    <!-- Simple Dark Mode Toggle for Login Screen -->
                     <button onclick="toggleDarkMode()" class="absolute top-4 right-4 text-indigo-200 hover:text-white transition-colors">
                         <i data-lucide="moon" class="w-5 h-5 dark:hidden"></i>
                         <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
                     </button>
-
                     <div class="mx-auto bg-white/20 w-12 h-12 rounded-lg flex items-center justify-center mb-4 backdrop-blur-sm">
                         <i data-lucide="shield-check" class="text-white w-7 h-7"></i>
                     </div>
@@ -126,39 +54,40 @@
                     <p class="text-indigo-100 text-sm mt-1">Real-time Intelligence & Protection</p>
                 </div>
 
-                <!-- Toggle -->
                 <div class="flex border-b border-slate-100 dark:border-slate-700">
                     <button onclick="toggleAuth('login')" id="tab-login" class="flex-1 py-4 text-sm font-medium text-indigo-600 border-b-2 border-indigo-600 dark:bg-slate-800 transition-colors">Sign In</button>
                     <button onclick="toggleAuth('signup')" id="tab-signup" class="flex-1 py-4 text-sm font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 dark:bg-slate-800 transition-colors">Create Account</button>
                 </div>
 
-                <!-- Forms -->
                 <div class="p-8">
-                    <!-- Login Form -->
                     <form id="form-login" onsubmit="handleLogin(event)" class="space-y-4">
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Email</label>
-                            <input type="email" value="officer@rakshak.ai" class="w-full px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all dark:bg-slate-700 dark:text-white" placeholder="name@company.com">
+                            <input type="email" id="login-email" autocomplete="username" class="w-full px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none dark:bg-slate-700 dark:text-white" placeholder="name@company.com" required>
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Password</label>
-                            <input type="password" value="password" class="w-full px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all dark:bg-slate-700 dark:text-white" placeholder="••••••••">
+                            <input type="password" id="login-password" autocomplete="current-password" class="w-full px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none dark:bg-slate-700 dark:text-white" placeholder="••••••••" required>
                         </div>
                         <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2">
                             <span>Sign In</span>
                             <i data-lucide="arrow-right" class="w-4 h-4"></i>
                         </button>
+                        <p class="text-xs text-center text-slate-400 mt-4">Demo Access: officer@rakshak.ai / password</p>
                     </form>
 
-                    <!-- Signup Form (Hidden by default) -->
                     <form id="form-signup" onsubmit="handleSignup(event)" class="space-y-4 hidden">
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Full Name</label>
-                            <input type="text" class="w-full px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all dark:bg-slate-700 dark:text-white" placeholder="John Doe">
+                            <input type="text" id="signup-name" class="w-full px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none dark:bg-slate-700 dark:text-white" placeholder="John Doe" required>
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Email</label>
-                            <input type="email" class="w-full px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all dark:bg-slate-700 dark:text-white" placeholder="name@company.com">
+                            <input type="email" id="signup-email" autocomplete="username" class="w-full px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none dark:bg-slate-700 dark:text-white" placeholder="name@company.com" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Create Password</label>
+                            <input type="password" id="signup-password" autocomplete="new-password" class="w-full px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none dark:bg-slate-700 dark:text-white" placeholder="••••••••" required>
                         </div>
                         <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-medium py-2.5 rounded-lg transition-colors">
                             Create Account
@@ -168,525 +97,305 @@
             </div>
         </div>
 
-        <!-- VIEW 2: PERMISSIONS (Mic Access) -->
         <div id="view-permissions" class="view-section w-full h-full hidden flex-col items-center justify-center p-6 text-center">
             <div class="max-w-md w-full">
                 <div class="w-20 h-20 bg-indigo-50 dark:bg-indigo-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
                     <i data-lucide="mic" class="text-indigo-600 dark:text-indigo-400 w-10 h-10"></i>
                 </div>
                 <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Enable Microphone</h2>
-                <p class="text-slate-500 dark:text-slate-400 mb-8 leading-relaxed">
-                    To analyze conversations in real-time, Rakshak AI needs access to your microphone. We process audio securely and do not store raw recordings.
-                </p>
-                
-                <button onclick="requestPermissions()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-xl shadow-lg shadow-indigo-200 dark:shadow-none transition-all transform active:scale-95 flex items-center justify-center gap-2">
-                    <i data-lucide="check-circle" class="w-5 h-5"></i>
-                    <span>Allow Microphone Access</span>
+                <p class="text-slate-500 dark:text-slate-400 mb-8">Rakshak AI needs microphone access to detect threats in real-time.</p>
+                <button onclick="requestPermissions()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-xl shadow-lg transition-all transform active:scale-95 flex items-center justify-center gap-2">
+                    <i data-lucide="check-circle" class="w-5 h-5"></i><span>Allow Access</span>
                 </button>
-                <button onclick="skipPermissions()" class="mt-4 text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">Skip for now (Demo Mode)</button>
             </div>
         </div>
 
-        <!-- VIEW 3: DASHBOARD / ACTIVE CALL -->
         <div id="view-dashboard" class="view-section w-full h-full hidden flex-col bg-white dark:bg-slate-900 transition-colors">
-            
-            <!-- Navbar -->
-            <header class="border-b border-slate-100 dark:border-slate-700 px-6 py-4 flex items-center justify-between bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-10 transition-colors">
+            <header class="border-b border-slate-100 dark:border-slate-700 px-6 py-4 flex items-center justify-between bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-10">
                 <div class="flex items-center gap-2">
-                    <div class="bg-indigo-600 text-white p-1.5 rounded-md">
-                        <i data-lucide="shield-check" class="w-5 h-5"></i>
-                    </div>
+                    <div class="bg-indigo-600 text-white p-1.5 rounded-md"><i data-lucide="shield-check" class="w-5 h-5"></i></div>
                     <span class="font-bold text-slate-800 dark:text-white">Rakshak AI</span>
                 </div>
                 <div class="flex items-center gap-4">
                     <div class="flex items-center gap-2 px-3 py-1 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-xs font-medium border border-green-100 dark:border-green-800">
-                        <span class="relative flex h-2 w-2">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                        </span>
+                        <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span></span>
                         System Online
                     </div>
-                    
-                    <!-- Dark Mode Toggle -->
-                    <button onclick="toggleDarkMode()" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full transition-all">
-                        <i data-lucide="moon" class="w-5 h-5 dark:hidden"></i>
-                        <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
-                    </button>
-
-                    <button class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full transition-all">
-                        <i data-lucide="settings" class="w-5 h-5"></i>
-                    </button>
-                    <div class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-700 dark:text-indigo-300 font-bold text-xs border border-indigo-200 dark:border-indigo-800">
-                        JD
-                    </div>
+                    <button onclick="toggleDarkMode()" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-full transition-all"><i data-lucide="moon" class="w-5 h-5 dark:hidden"></i><i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i></button>
+                    <button onclick="logout()" class="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full transition-all" title="Logout"><i data-lucide="log-out" class="w-5 h-5"></i></button>
+                    <div class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-700 dark:text-indigo-300 font-bold text-xs border border-indigo-200 dark:border-indigo-800" id="profile-initials">JD</div>
                 </div>
             </header>
 
-            <!-- Main Content Area -->
             <main class="flex-1 flex overflow-hidden">
-                
-                <!-- Left: Live Analysis Feed -->
                 <div class="flex-1 p-6 overflow-y-auto bg-slate-50 dark:bg-slate-900 flex flex-col items-center justify-center transition-all" id="dashboard-content">
                     
-                    <!-- State: IDLE -->
                     <div id="state-idle" class="text-center">
-                        <div class="w-24 h-24 bg-white dark:bg-slate-800 rounded-full shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-center mx-auto mb-6 transition-colors">
+                        <div class="w-24 h-24 bg-white dark:bg-slate-800 rounded-full shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-center mx-auto mb-6">
                             <i data-lucide="mic" class="text-slate-300 dark:text-slate-500 w-10 h-10"></i>
                         </div>
                         <h3 class="text-xl font-semibold text-slate-800 dark:text-white">Ready for Analysis</h3>
                         <p class="text-slate-500 dark:text-slate-400 mt-2 mb-8">Waiting for audio stream to begin...</p>
-                        <button onclick="startCall()" class="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-lg shadow-indigo-200 dark:shadow-none font-medium transition-all transform hover:-translate-y-1 flex items-center gap-2 mx-auto">
-                            <i data-lucide="play" class="w-4 h-4 fill-current"></i>
-                            Start Live Analysis
+                        <button onclick="startCall()" class="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-lg font-medium transition-all transform hover:-translate-y-1 flex items-center gap-2 mx-auto">
+                            <i data-lucide="play" class="w-4 h-4 fill-current"></i> Start Live Analysis
                         </button>
                     </div>
 
-                    <!-- State: ACTIVE CALL (Hidden by default) -->
                     <div id="state-active" class="w-full max-w-5xl hidden flex-col h-full">
-                        
-                        <!-- Visualization Header -->
-                        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 mb-6 flex items-center justify-between transition-colors">
+                        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 mb-6 flex items-center justify-between">
                             <div class="flex items-center gap-4">
                                 <div class="relative w-12 h-12 flex items-center justify-center">
                                     <div class="mic-pulse w-12 h-12 rounded-full absolute"></div>
-                                    <div class="bg-white dark:bg-slate-700 relative z-10 w-10 h-10 rounded-full flex items-center justify-center">
-                                        <i data-lucide="mic" class="text-red-500 w-5 h-5"></i>
-                                    </div>
+                                    <div class="bg-white dark:bg-slate-700 relative z-10 w-10 h-10 rounded-full flex items-center justify-center"><i data-lucide="mic" class="text-red-500 w-5 h-5"></i></div>
                                 </div>
-                                <div>
-                                    <h3 class="font-bold text-slate-800 dark:text-white">Live Monitoring</h3>
-                                    <p class="text-xs text-slate-500 dark:text-slate-400 font-mono" id="call-timer">00:00</p>
-                                </div>
+                                <div><h3 class="font-bold text-slate-800 dark:text-white">Live Monitoring</h3><p class="text-xs text-slate-500 dark:text-slate-400 font-mono" id="call-timer">00:00</p></div>
                             </div>
-                            
-                            <!-- Audio Wave Animation -->
                             <div class="flex items-center justify-center gap-1 h-12 w-32" id="audio-visualizer">
-                                <div class="bar" style="animation-duration: 474ms"></div>
-                                <div class="bar" style="animation-duration: 433ms"></div>
-                                <div class="bar" style="animation-duration: 407ms"></div>
-                                <div class="bar" style="animation-duration: 458ms"></div>
-                                <div class="bar" style="animation-duration: 400ms"></div>
+                                <div class="bar" style="animation-duration: 474ms"></div><div class="bar" style="animation-duration: 433ms"></div><div class="bar" style="animation-duration: 407ms"></div><div class="bar" style="animation-duration: 458ms"></div><div class="bar" style="animation-duration: 400ms"></div>
                             </div>
-
-                            <button onclick="endCall()" class="px-4 py-2 border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg text-sm font-medium transition-colors">
-                                End Session
-                            </button>
+                            <button onclick="endCall()" class="px-4 py-2 border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg text-sm font-medium transition-colors">End Session</button>
                         </div>
 
-                        <!-- Live Transcript & Insights Grid -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 flex-1 overflow-hidden">
-                            
-                            <!-- Transcript Column -->
-                            <div class="md:col-span-2 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col overflow-hidden transition-colors">
+                            <div class="md:col-span-2 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col overflow-hidden">
                                 <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50">
                                     <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Live Transcript</span>
                                     <span class="text-xs text-slate-400 dark:text-slate-500 flex items-center gap-1"><div class="w-1.5 h-1.5 bg-green-500 rounded-full"></div> Syncing</span>
                                 </div>
-                                <div id="transcript-container" class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar scroll-smooth">
-                                    <!-- Transcript items will be injected here via JS -->
-                                </div>
+                                <div id="transcript-container" class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar scroll-smooth"></div>
                             </div>
-
-                            <!-- Insights Column -->
                             <div class="flex flex-col gap-4">
-                                <!-- Sentiment Card -->
-                                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-5 transition-colors">
-                                    <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-4">Threat Level / Sentiment</h4>
-                                    <div class="flex items-end gap-2 mb-2">
-                                        <span class="text-3xl font-bold text-slate-800 dark:text-white" id="sentiment-score">Safe</span>
-                                    </div>
-                                    <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2">
-                                        <div id="sentiment-bar" class="bg-emerald-500 h-2 rounded-full transition-all duration-1000" style="width: 10%"></div>
-                                    </div>
+                                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-5">
+                                    <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-4">Threat Level</h4>
+                                    <div class="flex items-end gap-2 mb-2"><span class="text-3xl font-bold text-slate-800 dark:text-white" id="sentiment-score">Safe</span></div>
+                                    <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2"><div id="sentiment-bar" class="bg-emerald-500 h-2 rounded-full transition-all duration-1000" style="width: 10%"></div></div>
                                 </div>
-
-                                <!-- Action Items / Checklist -->
-                                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex-1 flex flex-col transition-colors">
-                                    <div class="p-4 border-b border-slate-100 dark:border-slate-700">
-                                        <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Safety Protocols</h4>
-                                    </div>
+                                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex-1 flex flex-col">
+                                    <div class="p-4 border-b border-slate-100 dark:border-slate-700"><h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Safety Protocols</h4></div>
                                     <div class="p-4 space-y-3" id="checklist-container">
-                                        <div class="flex items-center gap-3 text-sm text-slate-400 dark:text-slate-500">
-                                            <i data-lucide="shield" class="w-4 h-4"></i>
-                                            <span>Caller Verified</span>
-                                        </div>
-                                        <div class="flex items-center gap-3 text-sm text-slate-400 dark:text-slate-500">
-                                            <i data-lucide="alert-triangle" class="w-4 h-4"></i>
-                                            <span>Sensitive Info Request</span>
-                                        </div>
-                                        <div class="flex items-center gap-3 text-sm text-slate-400 dark:text-slate-500">
-                                            <i data-lucide="clock" class="w-4 h-4"></i>
-                                            <span>Urgency/Threats</span>
-                                        </div>
+                                        <div class="flex items-center gap-3 text-sm text-slate-400 dark:text-slate-500"><i data-lucide="shield" class="w-4 h-4"></i> <span>Caller Verified</span></div>
+                                        <div class="flex items-center gap-3 text-sm text-slate-400 dark:text-slate-500"><i data-lucide="alert-triangle" class="w-4 h-4"></i> <span>Sensitive Info Request</span></div>
+                                        <div class="flex items-center gap-3 text-sm text-slate-400 dark:text-slate-500"><i data-lucide="clock" class="w-4 h-4"></i> <span>Urgency/Threats</span></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </main>
         </div>
-
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // --- CONFIGURATION ---
-        // Backend Team: Paste your WebSocket URL here
         const BACKEND_SOCKET_URL = 'ws://localhost:8000/listen';
-
-        // --- Icons Init ---
         lucide.createIcons();
+        let callTimerInterval, callDuration = 0, mediaRecorder, socket;
 
-        // --- State Management ---
-        let callTimerInterval;
-        let callDuration = 0;
-        let isCallActive = false;
-        
-        // --- Dark Mode Logic ---
-        function toggleDarkMode() {
-            const html = document.documentElement;
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                localStorage.theme = 'light';
-            } else {
-                html.classList.add('dark');
-                localStorage.theme = 'dark';
+        // --- AUTH LOGIC (MOCK DB) ---
+        // 1. Check Session on Load
+        window.addEventListener('DOMContentLoaded', () => {
+            const activeSession = localStorage.getItem('rakshak_session');
+            if (activeSession) {
+                const user = JSON.parse(activeSession);
+                loginSuccess(user);
             }
-        }
-        
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
+        });
 
-        // --- Utility Functions ---
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            
-            const colors = type === 'success' ? 'bg-emerald-500' : 'bg-red-500';
-            const icon = type === 'success' ? 'check' : 'alert-circle';
+        // 2. Handle Login
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const btn = e.target.querySelector('button');
+            const originalBtn = btn.innerHTML;
 
-            toast.className = `flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg text-white transform transition-all duration-300 translate-x-full ${colors} min-w-[300px]`;
-            toast.innerHTML = `
-                <i data-lucide="${icon}" class="w-5 h-5"></i>
-                <span class="font-medium text-sm">${message}</span>
-            `;
-            
-            container.appendChild(toast);
+            btn.innerHTML = `<i data-lucide="loader-2" class="animate-spin w-5 h-5"></i>`;
             lucide.createIcons();
 
-            requestAnimationFrame(() => {
-                toast.classList.remove('translate-x-full');
-            });
-
             setTimeout(() => {
-                toast.classList.add('translate-x-full', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+                // Check Demo Account OR LocalStorage DB
+                const dbUser = JSON.parse(localStorage.getItem('rakshak_db_user_' + email));
+                
+                if ((email === 'officer@rakshak.ai' && password === 'password') || 
+                    (dbUser && dbUser.password === password)) {
+                    
+                    const user = dbUser || { email: email, name: "Officer" };
+                    localStorage.setItem('rakshak_session', JSON.stringify(user));
+                    loginSuccess(user);
+                    showToast('Welcome back, Officer.');
+                } else {
+                    showToast('Invalid credentials', 'error');
+                    btn.innerHTML = originalBtn;
+                }
+            }, 800);
         }
 
+        // 3. Handle Signup
+        function handleSignup(e) {
+            e.preventDefault();
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            
+            // Save to "Mock DB"
+            const newUser = { name, email, password };
+            localStorage.setItem('rakshak_db_user_' + email, JSON.stringify(newUser));
+            
+            showToast('Account created! Please sign in.');
+            toggleAuth('login');
+            
+            // Auto-fill login for convenience
+            document.getElementById('login-email').value = email;
+            document.getElementById('login-password').value = password;
+        }
+
+        function loginSuccess(user) {
+            updateProfileUI(user);
+            // Check mic permission
+            if (localStorage.getItem('mic_permission') === 'granted') {
+                switchView('view-dashboard');
+            } else {
+                switchView('view-permissions');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('rakshak_session');
+            endCall();
+            switchView('view-auth');
+            showToast('Logged out');
+        }
+
+        function updateProfileUI(user) {
+            const initials = (user.name || user.email).substring(0, 2).toUpperCase();
+            const el = document.getElementById('profile-initials');
+            if(el) el.innerText = initials;
+        }
+
+        // --- VIEW NAVIGATION ---
         function switchView(viewId) {
             document.querySelectorAll('.view-section').forEach(el => {
-                el.classList.add('hidden');
-                el.classList.remove('flex');
+                el.classList.add('hidden'); el.classList.remove('flex');
             });
             const target = document.getElementById(viewId);
-            target.classList.remove('hidden');
-            target.classList.add('flex');
-            
-            // Add slight fade in effect
+            target.classList.remove('hidden'); target.classList.add('flex');
             target.classList.add('fade-enter');
             requestAnimationFrame(() => {
                 target.classList.add('fade-enter-active');
-                setTimeout(() => {
-                    target.classList.remove('fade-enter', 'fade-enter-active');
-                }, 300);
+                setTimeout(() => target.classList.remove('fade-enter', 'fade-enter-active'), 300);
             });
         }
 
-        // --- Auth Logic ---
         function toggleAuth(mode) {
             const loginForm = document.getElementById('form-login');
             const signupForm = document.getElementById('form-signup');
             const loginTab = document.getElementById('tab-login');
             const signupTab = document.getElementById('tab-signup');
-
             if (mode === 'login') {
-                loginForm.classList.remove('hidden');
-                signupForm.classList.add('hidden');
-                
-                loginTab.classList.add('text-indigo-600', 'border-indigo-600');
-                loginTab.classList.remove('text-slate-500', 'dark:text-slate-400');
-                
-                signupTab.classList.remove('text-indigo-600', 'border-indigo-600');
-                signupTab.classList.add('text-slate-500', 'dark:text-slate-400');
+                loginForm.classList.remove('hidden'); signupForm.classList.add('hidden');
+                loginTab.classList.add('text-indigo-600', 'border-indigo-600', 'bg-white'); loginTab.classList.remove('text-slate-500');
+                signupTab.classList.remove('text-indigo-600', 'border-indigo-600'); signupTab.classList.add('text-slate-500');
             } else {
-                loginForm.classList.add('hidden');
-                signupForm.classList.remove('hidden');
-
-                signupTab.classList.add('text-indigo-600', 'border-indigo-600');
-                signupTab.classList.remove('text-slate-500', 'dark:text-slate-400');
-
-                loginTab.classList.remove('text-indigo-600', 'border-indigo-600');
-                loginTab.classList.add('text-slate-500', 'dark:text-slate-400');
+                loginForm.classList.add('hidden'); signupForm.classList.remove('hidden');
+                signupTab.classList.add('text-indigo-600', 'border-indigo-600'); signupTab.classList.remove('text-slate-500');
+                loginTab.classList.remove('text-indigo-600', 'border-indigo-600'); loginTab.classList.add('text-slate-500');
             }
         }
 
-        function handleLogin(e) {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
-            const originalContent = btn.innerHTML;
-            btn.innerHTML = `<i data-lucide="loader-2" class="animate-spin w-5 h-5"></i>`;
-            lucide.createIcons();
-            
-            setTimeout(() => {
-                showToast('Successfully logged in');
-                switchView('view-permissions');
-            }, 1000);
+        // --- UTILS ---
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) { html.classList.remove('dark'); localStorage.theme = 'light'; } 
+            else { html.classList.add('dark'); localStorage.theme = 'dark'; }
         }
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark');
 
-        function handleSignup(e) {
-            e.preventDefault();
-            showToast('Account created! Please log in.');
-            toggleAuth('login');
-        }
-
-        // --- Permissions Logic ---
         function requestPermissions() {
-            setTimeout(() => {
-                showToast('Microphone access granted');
-                switchView('view-dashboard');
-            }, 800);
+            localStorage.setItem('mic_permission', 'granted');
+            showToast('Microphone access granted');
+            switchView('view-dashboard');
         }
 
-        function skipPermissions() {
-            showToast('Microphone access denied', 'error');
-            setTimeout(() => {
-                switchView('view-dashboard');
-            }, 500);
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const colors = type === 'success' ? 'bg-emerald-500' : 'bg-red-500';
+            const icon = type === 'success' ? 'check' : 'alert-circle';
+            toast.className = `flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg text-white transform transition-all duration-300 translate-x-full ${colors} min-w-[300px]`;
+            toast.innerHTML = `<i data-lucide="${icon}" class="w-5 h-5"></i><span class="font-medium text-sm">${message}</span>`;
+            container.appendChild(toast);
+            lucide.createIcons();
+            requestAnimationFrame(() => toast.classList.remove('translate-x-full'));
+            setTimeout(() => { toast.classList.add('translate-x-full', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 3000);
         }
 
-        // --- Active Call Logic & REAL BACKEND CONFIGURATION ---
-        let mediaRecorder;
-        let socket;
-
+        // --- WEBSOCKET & AUDIO ---
         function startCall() {
             document.getElementById('state-idle').classList.add('hidden');
             const activeState = document.getElementById('state-active');
-            activeState.classList.remove('hidden');
-            activeState.classList.add('flex');
-            
-            isCallActive = true;
-            callDuration = 0;
-            updateTimer();
-            callTimerInterval = setInterval(updateTimer, 1000);
-
-            // ACTIVATED FOR DEMO:
+            activeState.classList.remove('hidden'); activeState.classList.add('flex');
             startRealAudioStream();
-            
-            // Mock stream is disabled but kept for reference if needed
-            // startMockStream();
-            
-            showToast('Connecting to Backend Server...');
+            callDuration = 0; updateTimer(); callTimerInterval = setInterval(updateTimer, 1000);
         }
 
-        // --- REAL-TIME AUDIO HANDLER (BACKEND CONFIG) ---
         async function startRealAudioStream() {
             try {
-                // 1. Get Microphone Stream
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                
-                // 2. Connect to Backend WebSocket
                 socket = new WebSocket(BACKEND_SOCKET_URL);
-                
                 socket.onopen = () => {
-                    console.log('Connected to backend');
-                    showToast('Server Connected! Listening...', 'success');
-                    
-                    // 3. Initialize MediaRecorder to chunk audio
+                    console.log('Connected');
                     mediaRecorder = new MediaRecorder(stream);
-                    
-                    mediaRecorder.ondataavailable = (event) => {
-                        if (event.data.size > 0 && socket.readyState === WebSocket.OPEN) {
-                            // Send raw audio chunk (blob) to backend
-                            socket.send(event.data);
-                        }
+                    mediaRecorder.ondataavailable = (e) => {
+                        if (e.data.size > 0 && socket.readyState === WebSocket.OPEN) socket.send(e.data);
                     };
-
-                    // Slice audio every 250ms for low latency
                     mediaRecorder.start(250);
                 };
-
-                socket.onerror = (error) => {
-                    console.error("WebSocket Error:", error);
-                    showToast('Connection Failed. Is backend running?', 'error');
+                socket.onerror = () => showToast('Backend Disconnected', 'error');
+                socket.onmessage = (e) => {
+                    const data = JSON.parse(e.data);
+                    if (data.type === 'transcript') addTranscriptBubble(data.speaker, data.text, data.role);
+                    else if (data.type === 'sentiment') updateSentiment(data.label, data.score, data.color);
                 };
-
-                // --- DATA CONTRACT FOR BACKEND TEAM ---
-                // The Backend must send a JSON string with specific fields.
-                // Expected JSON Format Examples:
-                
-                // 1. For Transcript Update:
-                // {
-                //    "type": "transcript",
-                //    "speaker": "Caller",  (or "Agent" / "System")
-                //    "text": "Hello, I need your credit card details.",
-                //    "role": "customer"    ("customer" = left/gray bubble, "agent" = right/blue bubble)
-                // }
-
-                // 2. For Sentiment/Risk Update:
-                // {
-                //    "type": "sentiment",
-                //    "label": "Critical Risk",
-                //    "score": 90,          (0-100)
-                //    "color": "bg-red-500" (Tailwind class: bg-red-500, bg-emerald-500, etc.)
-                // }
-                
-                socket.onmessage = (event) => {
-                    const data = JSON.parse(event.data);
-                    
-                    if (data.type === 'transcript') {
-                        addTranscriptBubble(data.speaker, data.text, data.role);
-                    } else if (data.type === 'sentiment') {
-                        updateSentiment(data.label, data.score, data.color);
-                    }
-                    // Add more handlers here if your backend sends "checklist" updates
-                };
-
-            } catch (err) {
-                console.error("Error accessing microphone:", err);
-                showToast("Microphone Error: Check permissions", "error");
-            }
+            } catch (err) { showToast("Mic Error: Permission Denied", "error"); }
         }
 
         function endCall() {
-            isCallActive = false;
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+            if (socket) socket.close();
             clearInterval(callTimerInterval);
-            
-            // Stop Real Audio
-            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-                mediaRecorder.stop();
-            }
-            if (socket) {
-                socket.close();
-            }
-
             document.getElementById('state-idle').classList.remove('hidden');
             document.getElementById('state-active').classList.add('hidden');
             document.getElementById('state-active').classList.remove('flex');
-            document.getElementById('transcript-container').innerHTML = ''; // Clear chat
-            resetChecklist();
-            showToast('Session ended.');
+            document.getElementById('transcript-container').innerHTML = '';
+            updateSentiment('Safe', 10, 'bg-emerald-500');
         }
 
         function updateTimer() {
             callDuration++;
-            const mins = Math.floor(callDuration / 60).toString().padStart(2, '0');
-            const secs = (callDuration % 60).toString().padStart(2, '0');
-            document.getElementById('call-timer').innerText = `${mins}:${secs}`;
-        }
-
-        // --- MOCK BACKEND SIMULATION (DISABLED - REFERENCE ONLY) ---
-        const mockDialogs = [
-            { speaker: 'Scammer', text: 'We need your OTP now.', type: 'customer' },
-            { action: 'sentiment', level: 'Critical Threat', score: 95, color: 'bg-red-500' }
-        ];
-
-        async function startMockStream() {
-            // ... (Mock logic removed to prevent confusion in Demo)
+            document.getElementById('call-timer').innerText = new Date(callDuration * 1000).toISOString().substr(14, 5);
         }
 
         function addTranscriptBubble(speaker, text, type) {
             const container = document.getElementById('transcript-container');
-            // 'agent' = You/App User (Right Side, Blue)
-            // 'customer' = External/Scammer (Left Side, Gray)
-            const align = type === 'agent' ? 'items-end' : 'items-start';
-            const bg = type === 'agent' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-200';
-            const radius = type === 'agent' ? 'rounded-t-2xl rounded-bl-2xl' : 'rounded-t-2xl rounded-br-2xl';
-
-            const html = `
-                <div class="flex flex-col ${align} w-full animate-in fade-in slide-in-from-bottom-2 duration-500">
-                    <span class="text-xs text-slate-400 dark:text-slate-500 mb-1 ml-1">${speaker}</span>
-                    <div class="${bg} ${radius} px-4 py-3 max-w-[85%] shadow-sm text-sm leading-relaxed">
-                        ${text}
-                    </div>
-                </div>
-            `;
-            container.insertAdjacentHTML('beforeend', html);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function addSystemNote(text) {
-            const container = document.getElementById('transcript-container');
-            const isCritical = text.includes('CRITICAL') || text.includes('Threat Level');
-            const colors = isCritical 
-                ? 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-red-100 dark:border-red-800'
-                : 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border-indigo-100 dark:border-indigo-800';
-            
-            const html = `
-                <div class="flex justify-center my-2 animate-in fade-in zoom-in duration-300">
-                    <span class="${colors} text-xs px-3 py-1 rounded-full border font-medium flex items-center gap-1">
-                        <i data-lucide="${isCritical ? 'alert-octagon' : 'zap'}" class="w-3 h-3"></i> ${text}
-                    </span>
-                </div>
-            `;
-            container.insertAdjacentHTML('beforeend', html);
-            lucide.createIcons();
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function checkOffItem(index) {
-            const items = document.querySelectorAll('#checklist-container > div');
-            if (items[index]) {
-                const el = items[index];
-                el.classList.remove('text-slate-400', 'dark:text-slate-500');
-                el.classList.add('text-red-600', 'dark:text-red-400', 'font-medium', 'bg-red-50', 'dark:bg-red-900/20', 'p-2', 'rounded-lg', 'transition-all');
-                
-                const iconContainer = el.querySelector('svg') || el.querySelector('i');
-                if (iconContainer) {
-                    const newIcon = document.createElement('i');
-                    newIcon.setAttribute('data-lucide', 'alert-circle');
-                    newIcon.className = 'w-4 h-4';
-                    iconContainer.replaceWith(newIcon);
-                    lucide.createIcons();
-                }
+            let html;
+            if (type === 'system') {
+                html = `<div class="flex justify-center my-2 animate-in fade-in zoom-in duration-300"><span class="bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 border border-red-100 dark:border-red-800 text-xs px-3 py-1 rounded-full font-medium flex items-center gap-1"><i data-lucide="alert-octagon" class="w-3 h-3"></i> ${text}</span></div>`;
+            } else {
+                const align = type === 'customer' ? 'items-start' : 'items-end';
+                const bg = type === 'customer' ? 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200' : 'bg-indigo-600 text-white';
+                html = `<div class="flex flex-col ${align} w-full animate-in fade-in slide-in-from-bottom-2 duration-500"><span class="text-xs text-slate-400 dark:text-slate-500 mb-1 ml-1">${speaker}</span><div class="${bg} rounded-t-2xl rounded-br-2xl px-4 py-3 max-w-[85%] shadow-sm text-sm leading-relaxed">${text}</div></div>`;
             }
-        }
-
-        function resetChecklist() {
-            const container = document.getElementById('checklist-container');
-            container.innerHTML = `
-                <div class="flex items-center gap-3 text-sm text-slate-400 dark:text-slate-500">
-                    <i data-lucide="shield" class="w-4 h-4"></i>
-                    <span>Caller Verified</span>
-                </div>
-                <div class="flex items-center gap-3 text-sm text-slate-400 dark:text-slate-500">
-                    <i data-lucide="alert-triangle" class="w-4 h-4"></i>
-                    <span>Sensitive Info Request</span>
-                </div>
-                <div class="flex items-center gap-3 text-sm text-slate-400 dark:text-slate-500">
-                    <i data-lucide="clock" class="w-4 h-4"></i>
-                    <span>Urgency/Threats</span>
-                </div>
-            `;
+            container.insertAdjacentHTML('beforeend', html);
             lucide.createIcons();
-            updateSentiment('Safe', 10, 'bg-emerald-500');
+            container.scrollTop = container.scrollHeight;
         }
 
         function updateSentiment(label, score, colorClass) {
-            const labelEl = document.getElementById('sentiment-score');
-            const barEl = document.getElementById('sentiment-bar');
-            
-            labelEl.innerText = label;
-            
-            barEl.className = `h-2 rounded-full transition-all duration-1000 ${colorClass}`;
-            barEl.style.width = `${score}%`;
+            document.getElementById('sentiment-score').innerText = label;
+            const bar = document.getElementById('sentiment-bar');
+            bar.className = `h-2 rounded-full transition-all duration-1000 ${colorClass}`;
+            bar.style.width = `${score}%`;
         }
-
     </script>
 </body>
 </html>

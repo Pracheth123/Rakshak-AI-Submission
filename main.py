@@ -13,20 +13,17 @@ async def websocket_endpoint(websocket: WebSocket):
     print("🔵 Client Connected")
 
     try:
-        # --- AUDIO SERVICE ---
-        # Current: Deepgram (Easiest for WebSockets)
-        # Future Upgrade: Swap with 'Amazon Transcribe Streaming' here
+        # Connect to Deepgram
         deepgram = DeepgramClient(settings.DEEPGRAM_API_KEY)
         dg_connection = deepgram.listen.asyncwebsocket.v("1")
 
-        # 1. Handle Incoming Transcripts
         async def on_message(self, result, **kwargs):
             sentence = result.channel.alternatives[0].transcript
             if not sentence: return
             
             print(f"🗣️  Heard: {sentence}")
 
-            # Send Transcript to UI
+            # Send Transcript
             await websocket.send_json({
                 "type": "transcript", 
                 "speaker": "Caller", 
@@ -34,18 +31,15 @@ async def websocket_endpoint(websocket: WebSocket):
                 "role": "customer"
             })
 
-            # 2. Analyze using Modular Engine
+            # Analyze
             threat = detector.analyze(sentence)
-            
             if threat:
-                # Send Visual Alert
                 await websocket.send_json({
                     "type": "sentiment",
                     "label": threat["label"],
                     "score": threat["score"],
                     "color": threat["color"]
                 })
-                # Send System Chat Alert
                 await websocket.send_json({
                     "type": "transcript",
                     "speaker": "Rakshak AI",
@@ -53,15 +47,11 @@ async def websocket_endpoint(websocket: WebSocket):
                     "role": "system"
                 })
 
-        # Register Event
         dg_connection.on(LiveTranscriptionEvents.Transcript, on_message)
-
-        # Start Deepgram
         options = LiveOptions(model="nova-2", language="en-US", smart_format=True)
         await dg_connection.start(options)
-        print("🟢 Deepgram Live Service Ready")
+        print("🟢 Service Ready")
 
-        # 3. Main Audio Loop (Browser -> Python -> Deepgram)
         while True:
             data = await websocket.receive_bytes()
             await dg_connection.send(data)
@@ -71,7 +61,6 @@ async def websocket_endpoint(websocket: WebSocket):
     except Exception as e:
         print(f"Error: {e}")
     finally:
-        # Clean up
         if 'dg_connection' in locals():
             await dg_connection.finish()
 
