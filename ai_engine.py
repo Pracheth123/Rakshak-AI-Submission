@@ -1,15 +1,15 @@
 import json
 from groq import AsyncGroq
-from config import settings # Let's go back to using your config file securely!
+from config import settings
 
 class ScamProtector:
     def __init__(self):
         print("🧠 Actual AI Mode Enabled (Groq LLM Engine)")
-        # Make sure your GROQ_API_KEY is in your .env file!
         self.client = AsyncGroq(api_key=settings.GROQ_API_KEY)
 
     async def analyze(self, text: str):
-        if not text or len(text.strip()) < 10:
+        # 1. LOWERED THE LIMIT TO 5 CHARACTERS
+        if not text or len(text.strip()) < 5:
             return None
 
         prompt = f"""
@@ -29,20 +29,25 @@ class ScamProtector:
         
         try:
             completion = await self.client.chat.completions.create(
-                model="llama-3.1-8b-instant", # <-- THIS IS THE NEW SUPPORTED MODEL
+                model="llama-3.1-8b-instant", 
                 messages=[{"role": "user", "content": prompt}],
-                response_format={"type": "json_object"}, # Forces perfect JSON output
+                response_format={"type": "json_object"}, 
                 temperature=0.1, 
             )
             
             raw_response = completion.choices[0].message.content.strip()
             result = json.loads(raw_response)
             
-            if result.get("is_threat") is True or result.get("is_threat") == "true" or result.get("is_threat") == "True":
+            # 2. X-RAY VISION: Print exactly what the AI decided to the terminal!
+            print(f"🤖 AI Decision for '{text}': {result.get('is_threat')} | Label: {result.get('label')}")
+            
+            # 3. Handle boolean True or string "true" safely
+            is_threat = result.get("is_threat")
+            if is_threat is True or str(is_threat).lower() == "true":
                 return result
                 
             return None
             
         except Exception as e:
-            print(f"LLM Error: {e}") 
+            print(f"❌ LLM Error: {e}") 
             return None

@@ -17,26 +17,11 @@ async def websocket_endpoint(websocket: WebSocket):
         deepgram = DeepgramClient(settings.DEEPGRAM_API_KEY)
         dg_connection = deepgram.listen.asyncwebsocket.v("1")
 
-        async def on_message(self, result, **kwargs):
-            sentence = result.channel.alternatives[0].transcript
-            if not sentence: return
-            
-            print(f"🗣️  Heard: {sentence}")
-
-            # Send Transcript
-            await websocket.send_json({
-                "type": "transcript", 
-                "speaker": "Caller", 
-                "text": sentence, 
-                "role": "customer"
-            })
-
-            # Analyze
-            # Analyze
-            # 2. Analyze using Modular Engine
+        # 1. HELPER FUNCTION: This handles the AI thinking in the background
+        async def analyze_and_send(sentence):
             threat = await detector.analyze(sentence)
             if threat:
-                # Send Visual Alert (Now includes confidence)
+                # Send Visual Alert
                 await websocket.send_json({
                     "type": "sentiment",
                     "label": threat["label"],
@@ -45,7 +30,7 @@ async def websocket_endpoint(websocket: WebSocket):
                     "color": threat["color"]
                 })
                 
-                # Send System Chat Alert (Now includes transparent reasoning)
+                # Send System Chat Alert
                 triggers_str = ", ".join(threat.get("triggers", []))
                 await websocket.send_json({
                     "type": "transcript",
@@ -54,8 +39,32 @@ async def websocket_endpoint(websocket: WebSocket):
                     "role": "system"
                 })
 
+        # 2. ON_MESSAGE: Instantly frees up Deepgram
+        async def on_message(self, result, **kwargs):
+            sentence = result.channel.alternatives[0].transcript
+            if not sentence: return
+            
+            print(f"🗣️  Heard: {sentence}")
+
+            # Instantly send the transcript to the frontend
+            await websocket.send_json({
+                "type": "transcript", 
+                "speaker": "Caller", 
+                "text": sentence, 
+                "role": "customer"
+            })
+
+            # RUN AI IN THE BACKGROUND (This prevents the ping timeout crash!)
+            asyncio.create_task(analyze_and_send(sentence))
+
         dg_connection.on(LiveTranscriptionEvents.Transcript, on_message)
-        options = LiveOptions(model="nova-2", language="en-US", smart_format=True)
+        
+        # 3. REMOVED KEEPALIVE to match your SDK version
+        options = LiveOptions(
+            model="nova-2", 
+            language="en-US", 
+            smart_format=True
+        )
         await dg_connection.start(options)
         print("🟢 Service Ready")
 
