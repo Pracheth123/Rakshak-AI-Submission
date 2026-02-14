@@ -32,18 +32,25 @@ async def websocket_endpoint(websocket: WebSocket):
             })
 
             # Analyze
-            threat = detector.analyze(sentence)
+            # Analyze
+            # 2. Analyze using Modular Engine
+            threat = await detector.analyze(sentence)
             if threat:
+                # Send Visual Alert (Now includes confidence)
                 await websocket.send_json({
                     "type": "sentiment",
                     "label": threat["label"],
                     "score": threat["score"],
+                    "confidence": threat.get("confidence", 85),
                     "color": threat["color"]
                 })
+                
+                # Send System Chat Alert (Now includes transparent reasoning)
+                triggers_str = ", ".join(threat.get("triggers", []))
                 await websocket.send_json({
                     "type": "transcript",
                     "speaker": "Rakshak AI",
-                    "text": f"🛡️ ALERT: {threat['reason']}",
+                    "text": f"🛡️ ALERT: {threat['reason']}. <br><span class='text-xs opacity-75'>Triggered by keywords: [ {triggers_str} ]</span>",
                     "role": "system"
                 })
 

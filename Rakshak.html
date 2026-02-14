@@ -98,14 +98,23 @@
         </div>
 
         <div id="view-permissions" class="view-section w-full h-full hidden flex-col items-center justify-center p-6 text-center">
-            <div class="max-w-md w-full">
-                <div class="w-20 h-20 bg-indigo-50 dark:bg-indigo-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <i data-lucide="mic" class="text-indigo-600 dark:text-indigo-400 w-10 h-10"></i>
+            <div class="max-w-md w-full bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700">
+                <div class="w-16 h-16 bg-indigo-50 dark:bg-indigo-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="shield-alert" class="text-indigo-600 dark:text-indigo-400 w-8 h-8"></i>
                 </div>
-                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Enable Microphone</h2>
-                <p class="text-slate-500 dark:text-slate-400 mb-8">Rakshak AI needs microphone access to detect threats in real-time.</p>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Privacy & Consent</h2>
+                
+                <div class="text-left bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl mb-6 border border-slate-200 dark:border-slate-700">
+                    <h3 class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Before we begin:</h3>
+                    <ul class="text-xs text-slate-500 dark:text-slate-400 space-y-2">
+                        <li class="flex items-start gap-2"><i data-lucide="mic-off" class="w-4 h-4 text-indigo-500 shrink-0"></i> <strong>No Recording:</strong> Audio is processed ephemerally in real-time. We do not store or save voice recordings.</li>
+                        <li class="flex items-start gap-2"><i data-lucide="server" class="w-4 h-4 text-indigo-500 shrink-0"></i> <strong>Prototype Notice:</strong> This is a hackathon prototype. Do not input real PII or financial data.</li>
+                        <li class="flex items-start gap-2"><i data-lucide="scale" class="w-4 h-4 text-indigo-500 shrink-0"></i> <strong>AI Transparency:</strong> Alerts are generated via rule-based matching and AI analysis. False positives may occur.</li>
+                    </ul>
+                </div>
+
                 <button onclick="requestPermissions()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-xl shadow-lg transition-all transform active:scale-95 flex items-center justify-center gap-2">
-                    <i data-lucide="check-circle" class="w-5 h-5"></i><span>Allow Access</span>
+                    <i data-lucide="check-circle" class="w-5 h-5"></i><span>I Consent & Allow Microphone</span>
                 </button>
             </div>
         </div>
@@ -166,7 +175,10 @@
                             </div>
                             <div class="flex flex-col gap-4">
                                 <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-5">
-                                    <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-4">Threat Level</h4>
+                                    <div class="flex justify-between items-start mb-4">
+                                        <h4 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Threat Level</h4>
+                                        <span id="sentiment-confidence" class="text-xs font-mono font-medium text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded">Conf: 100%</span>
+                                    </div>
                                     <div class="flex items-end gap-2 mb-2"><span class="text-3xl font-bold text-slate-800 dark:text-white" id="sentiment-score">Safe</span></div>
                                     <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2"><div id="sentiment-bar" class="bg-emerald-500 h-2 rounded-full transition-all duration-1000" style="width: 10%"></div></div>
                                 </div>
@@ -192,7 +204,6 @@
         let callTimerInterval, callDuration = 0, mediaRecorder, socket;
 
         // --- AUTH LOGIC (MOCK DB) ---
-        // 1. Check Session on Load
         window.addEventListener('DOMContentLoaded', () => {
             const activeSession = localStorage.getItem('rakshak_session');
             if (activeSession) {
@@ -201,7 +212,6 @@
             }
         });
 
-        // 2. Handle Login
         function handleLogin(e) {
             e.preventDefault();
             const email = document.getElementById('login-email').value;
@@ -213,7 +223,6 @@
             lucide.createIcons();
 
             setTimeout(() => {
-                // Check Demo Account OR LocalStorage DB
                 const dbUser = JSON.parse(localStorage.getItem('rakshak_db_user_' + email));
                 
                 if ((email === 'officer@rakshak.ai' && password === 'password') || 
@@ -230,28 +239,24 @@
             }, 800);
         }
 
-        // 3. Handle Signup
         function handleSignup(e) {
             e.preventDefault();
             const name = document.getElementById('signup-name').value;
             const email = document.getElementById('signup-email').value;
             const password = document.getElementById('signup-password').value;
             
-            // Save to "Mock DB"
             const newUser = { name, email, password };
             localStorage.setItem('rakshak_db_user_' + email, JSON.stringify(newUser));
             
             showToast('Account created! Please sign in.');
             toggleAuth('login');
             
-            // Auto-fill login for convenience
             document.getElementById('login-email').value = email;
             document.getElementById('login-password').value = password;
         }
 
         function loginSuccess(user) {
             updateProfileUI(user);
-            // Check mic permission
             if (localStorage.getItem('mic_permission') === 'granted') {
                 switchView('view-dashboard');
             } else {
@@ -312,7 +317,7 @@
 
         function requestPermissions() {
             localStorage.setItem('mic_permission', 'granted');
-            showToast('Microphone access granted');
+            showToast('Consent accepted & Microphone access granted');
             switchView('view-dashboard');
         }
 
@@ -353,8 +358,12 @@
                 socket.onerror = () => showToast('Backend Disconnected', 'error');
                 socket.onmessage = (e) => {
                     const data = JSON.parse(e.data);
-                    if (data.type === 'transcript') addTranscriptBubble(data.speaker, data.text, data.role);
-                    else if (data.type === 'sentiment') updateSentiment(data.label, data.score, data.color);
+                    if (data.type === 'transcript') {
+                        addTranscriptBubble(data.speaker, data.text, data.role);
+                    }
+                    else if (data.type === 'sentiment') {
+                        updateSentiment(data.label, data.score, data.color, data.confidence);
+                    }
                 };
             } catch (err) { showToast("Mic Error: Permission Denied", "error"); }
         }
@@ -367,7 +376,7 @@
             document.getElementById('state-active').classList.add('hidden');
             document.getElementById('state-active').classList.remove('flex');
             document.getElementById('transcript-container').innerHTML = '';
-            updateSentiment('Safe', 10, 'bg-emerald-500');
+            updateSentiment('Safe', 10, 'bg-emerald-500', 100);
         }
 
         function updateTimer() {
@@ -379,19 +388,36 @@
             const container = document.getElementById('transcript-container');
             let html;
             if (type === 'system') {
-                html = `<div class="flex justify-center my-2 animate-in fade-in zoom-in duration-300"><span class="bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 border border-red-100 dark:border-red-800 text-xs px-3 py-1 rounded-full font-medium flex items-center gap-1"><i data-lucide="alert-octagon" class="w-3 h-3"></i> ${text}</span></div>`;
+                html = `
+                    <div class="flex justify-center my-3 animate-in fade-in zoom-in duration-300">
+                        <span class="bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 border border-red-100 dark:border-red-800 text-xs px-4 py-2 rounded-xl font-medium flex items-start gap-2 max-w-[90%] shadow-sm">
+                            <i data-lucide="alert-octagon" class="w-4 h-4 mt-0.5 shrink-0"></i> 
+                            <div>${text}</div>
+                        </span>
+                    </div>`;
             } else {
                 const align = type === 'customer' ? 'items-start' : 'items-end';
-                const bg = type === 'customer' ? 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200' : 'bg-indigo-600 text-white';
-                html = `<div class="flex flex-col ${align} w-full animate-in fade-in slide-in-from-bottom-2 duration-500"><span class="text-xs text-slate-400 dark:text-slate-500 mb-1 ml-1">${speaker}</span><div class="${bg} rounded-t-2xl rounded-br-2xl px-4 py-3 max-w-[85%] shadow-sm text-sm leading-relaxed">${text}</div></div>`;
+                const bg = type === 'customer' ? 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600' : 'bg-indigo-600 text-white';
+                const radius = type === 'customer' ? 'rounded-t-2xl rounded-br-2xl' : 'rounded-t-2xl rounded-bl-2xl';
+                html = `
+                    <div class="flex flex-col ${align} w-full animate-in fade-in slide-in-from-bottom-2 duration-500 mb-4">
+                        <span class="text-xs text-slate-400 dark:text-slate-500 mb-1 ml-1">${speaker}</span>
+                        <div class="${bg} ${radius} px-4 py-3 max-w-[85%] shadow-sm text-sm leading-relaxed">
+                            ${text}
+                        </div>
+                    </div>`;
             }
             container.insertAdjacentHTML('beforeend', html);
             lucide.createIcons();
             container.scrollTop = container.scrollHeight;
         }
 
-        function updateSentiment(label, score, colorClass) {
+        function updateSentiment(label, score, colorClass, confidence = 100) {
             document.getElementById('sentiment-score').innerText = label;
+            const confEl = document.getElementById('sentiment-confidence');
+            if (confEl) {
+                confEl.innerText = `Conf: ${confidence}%`;
+            }
             const bar = document.getElementById('sentiment-bar');
             bar.className = `h-2 rounded-full transition-all duration-1000 ${colorClass}`;
             bar.style.width = `${score}%`;
